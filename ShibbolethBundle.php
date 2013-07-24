@@ -4,7 +4,7 @@ namespace Duke\ShibbolethBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Duke\ShibbolethBundle\Security\ShibFactory;
+use Duke\ShibbolethBundle\Security\ShibbolethFactory;
 
 class ShibbolethBundle extends Bundle
 {
@@ -13,6 +13,6 @@ class ShibbolethBundle extends Bundle
         parent::build($container);
 
         $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ShibFactory());
+        $extension->addSecurityListenerFactory(new ShibbolethFactory());
     }	
 }

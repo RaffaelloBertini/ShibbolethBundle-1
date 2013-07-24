@@ -8,13 +8,13 @@ class Shibboleth
 {
 	protected $login;
 	protected $logout;
-	protected $logoutTarget;
+	protected $returnTo;
 	    
-    public function __construct($login, $logout, $logoutTarget) 
+    public function __construct($login, $logout, $returnTo) 
     {
     	$this->login = $login;
 		$this->logout = $logout;
-		$this->logoutTarget = $logoutTarget;
+		$this->returnTo = $returnTo;
     }
 	
 	public function getLogin()
@@ -27,8 +27,8 @@ class Shibboleth
 		return $this->logout;
 	}	
 	
-	public function getLogoutTarget()
+	public function getReturnTo()
 	{
-		return $this->logoutTarget;
+		return $this->returnTo;
 	}
 }

@@ -9,9 +9,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Duke\ShibbolethBundle\Security\ShibUserToken;
+use Duke\ShibbolethBundle\Security\ShibbolethUserToken;
 
-class ShibListener implements ListenerInterface
+class ShibbolethListener implements ListenerInterface
 {
     protected $securityContext;
 	protected $authenticationManager;
@@ -35,7 +35,7 @@ class ShibListener implements ListenerInterface
 
 		// If user is logging in, let's create that sweet sweet token
         if (!empty($remoteUser)) {
-            $token = new ShibUserToken();
+            $token = new ShibbolethUserToken();
             $token->setUser($remoteUser);
 
             try {

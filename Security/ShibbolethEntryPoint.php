@@ -9,7 +9,7 @@ use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Duke\ShibbolethBundle\Security\Shibboleth;
 
-class ShibEntryPoint implements AuthenticationEntryPointInterface
+class ShibbolethEntryPoint implements AuthenticationEntryPointInterface
 {
     private $httpUtils;
 	private $shib;

@@ -4,7 +4,7 @@ namespace Duke\ShibbolethBundle\Security;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
-class ShibUserToken extends AbstractToken
+class ShibbolethUserToken extends AbstractToken
 {
     public function __construct(array $roles = array())
     {

@@ -6,9 +6,9 @@ use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProvid
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Duke\ShibbolethBundle\Security\ShibUserToken;
+use Duke\ShibbolethBundle\Security\ShibbolethUserToken;
 
-class ShibAuthenticationProvider implements AuthenticationProviderInterface
+class ShibbolethAuthenticationProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
 
@@ -22,7 +22,7 @@ class ShibAuthenticationProvider implements AuthenticationProviderInterface
         $user = $this->userProvider->loadUserByUsername($token->getUsername());
 
         if ($user) {
-            $authenticatedToken = new ShibUserToken($user->getRoles());
+            $authenticatedToken = new ShibbolethUserToken($user->getRoles());
             $authenticatedToken->setUser($user);
 
             return $authenticatedToken;
@@ -33,6 +33,6 @@ class ShibAuthenticationProvider implements AuthenticationProviderInterface
 
     public function supports(TokenInterface $token)
     {
-        return $token instanceof ShibUserToken;
+        return $token instanceof ShibbolethUserToken;
     }
 }

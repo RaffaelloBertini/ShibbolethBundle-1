@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Duke\ShibbolethBundle\Security\Shibboleth;
 
-class ShibLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHandlerInterface
+class ShibbolethLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHandlerInterface
 {
 	protected $shib;
 	
@@ -21,15 +21,18 @@ class ShibLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHandlerI
 	
     public function logout(Request $request, Response $response, TokenInterface $token)
     {	
-        if ($token instanceof ShibUserToken) {
+        if ($token instanceof ShibbolethUserToken) {
             $request->getSession()->invalidate();
         }        
     }
     
     public function onLogoutSuccess(Request $request)
     {
-    	$target = $this->shib->getLogoutTarget();
+    	$idpLogout = $this->shib->getLogout();
+    	$returnto = $this->shib->getReturnTo();
+		
+		$idpLogout .= '?returnto='.urlencode($returnto);
 
-        return new RedirectResponse($target);
+        return new RedirectResponse($idpLogout);
     }    
 }

@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
 		$rootNode->children()
         	->scalarNode('login')->end()
             ->scalarNode('logout')->end()
-			->scalarNode('logout_target')->end();        
+			->scalarNode('returnto')->end();        
 
         return $treeBuilder;
     }

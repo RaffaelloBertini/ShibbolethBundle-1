@@ -33,8 +33,8 @@ class ShibbolethExtension extends Extension
             $container->setParameter('shibboleth.logout', $config['logout']);
         }
         
-        if (isset($config['logout_target'])) {
-            $container->setParameter('shibboleth.logout_target', $config['logout_target']);
+        if (isset($config['returnto'])) {
+            $container->setParameter('shibboleth.returnto', $config['returnto']);
         }	
     }
 }
