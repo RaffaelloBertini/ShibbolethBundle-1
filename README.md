@@ -1,8 +1,8 @@
 ShibbolethBundle
 ================
 
-Provides Shibboleth authentication, using environmental variables, for your Symfony application. I've created this in an
-Apache basic auth. environment, but it should theoretically work in a Shibolized environment.
+Provides Shibboleth authentication, using environmental variables, for your Symfony 2 application. I've created this in an
+Apache basic auth. environment, but it should theoretically work in a Shibbolized environment.
 
 Special thanks goes out to Ronny Moreas, https://github.com/rmoreas/ShibbolethBundle. I've implemented his Shibboleth.php
 object idea to make accessing config.yml settings, from within the bundle, easier. If your Shibboleth instance is setup
@@ -49,7 +49,7 @@ Composer Installation
 Configuration
 -------------
 
-### 1. app/config/config.yml (w/ example values)
+### 1. app/config/config.yml
 
 Important note: In my local setup, I use port 8080. By default, Symfony redirects the user to port 80 when using
 SSL. You can change this behavior under the framework configuration as shown below.
@@ -62,31 +62,31 @@ framework:
     https_port: 8080
   
 shibboleth:
-  # Shib login
+  # Shib sample login
 	login: /shibboleth
     
-  # Shib logout
+  # Shib sample logout
   logout: /Shibboleth.sso/Logout
     
-  # Returnto query param used by IDP
+  # Sample returnto query param value used by IDP
   returnto: http://myapplication.com
     
-  # ENV var that used for the username
+  # Sample ENV var used for the username
   username: REMOTE_USER 
 ```
 
 ### 2. app/config/security.yml
 
 ```yml
-security:
-  ...
-  
-	firewalls:
-	  secured_area:
-		  ...
+  security:
+    ...
+	  
+    firewalls:
+	    secured_area:
+		    ...    
         
-      # Add the following authentication listener
-				shibboleth: ~
+        # Add the authentication listener
+        shibboleth: ~
         logout:
           
           # Logout path of for local logout
@@ -95,10 +95,10 @@ security:
           # Handler which handle redirect to Shib logout specified in config.yml
           success_handler: shib.security.logout_handler
 
-  access_control:
+    access_control:
   
-    # Sample ACL path. If logged in users should be using SSL, add the requires_channel attribute to force SSL
-    - { path: ^/ roles: [ROLE_ADMIN, ROLE_GUEST], requires_channel: https }
+      # Sample ACL path. If logged in users should be using SSL, add the requires_channel attribute to force SSL
+      - { path: ^/ roles: [ROLE_ADMIN, ROLE_GUEST], requires_channel: https }
       
 ```
 
@@ -111,25 +111,28 @@ relies on a document manager (I'm using Mongodb) to retreive users from a databa
 
 http://symfony.com/doc/current/cookbook/security/entity_provider.html
 
-### 3b. Add UserProvider to security.yml
+### 3b. Add UserProvider
 
 ```yml
-security:
-  ...
+# app/config/security.yml
+  security:
+    ...
     
-  providers:
+    providers:
     
-    # A sample document provider
-    document_provider:
-      id shibboleth_user_provider
+      # A sample document provider
+      document_provider:
+        id shibboleth_user_provider
 ```
 
 ### 3c. Create UserProvider service
 
-I'm injecting a document manager into my service because my project uses Mongo, but you could just as easily use an entity manager
+I'm injecting a document manager into my service because my project uses Mongodb, but you could just as easily inject an entity manager
+
 
 ```yml
-services:
+# Resources/config/services.yml
+  services:
     shibboleth_user_provider:
       class: THE\SAMPLE\ShibbolethUserProvider
       arguments: [@doctrine.odm.mongodb.document_manager]
