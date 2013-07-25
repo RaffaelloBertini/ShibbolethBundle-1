@@ -21,20 +21,15 @@ class ShibbolethFactory implements SecurityFactoryInterface
         $entryPointId = 'security.entry_point.shibboleth.'.$id;
         $container
             ->setDefinition($entryPointId, 
-            	new DefinitionDecorator('shibboleth.security.entry_point'))
-            ->replaceArgument(0, new Reference('security.http_utils'))
-            ->addArgument(new Reference('shibboleth'));
+            	new DefinitionDecorator('shibboleth.security.entry_point'));
 		
         $listenerId = 'security.authentication.listener.shibboleth.'.$id;
         $container
         	->setDefinition($listenerId, 
         		new DefinitionDecorator('shibboleth.security.authentication.listener'))
-			->addArgument(new Reference($entryPointId));				
+			->replaceArgument(2, new Reference($entryPointId));				
 		
-		// I'm really confused by this portion...maybe I've spent too much time programming today....
-		// What is the point of the below return if services still work when assigned to the container
-		// above and aren't passed to the array below?
-        return array($providerId, $listenerId, $entryPointId/*, $defaultEntryPoint*/);
+        return array($providerId, $listenerId, $entryPointId);
     }
 
     public function getPosition()

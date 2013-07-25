@@ -9,12 +9,14 @@ class Shibboleth
 	protected $login;
 	protected $logout;
 	protected $returnTo;
+	protected $username;
 	    
-    public function __construct($login, $logout, $returnTo) 
+    public function __construct($login, $logout, $returnTo, $username) 
     {
     	$this->login = $login;
 		$this->logout = $logout;
 		$this->returnTo = $returnTo;
+		$this->username = $username;
     }
 	
 	public function getLogin()
@@ -30,5 +32,10 @@ class Shibboleth
 	public function getReturnTo()
 	{
 		return $this->returnTo;
+	}
+	
+	public function getUsername()
+	{
+		return $this->username;
 	}
 }

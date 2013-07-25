@@ -24,17 +24,10 @@ class ShibbolethExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-		
-        if (isset($config['login'])) {
-            $container->setParameter('shibboleth.login', $config['login']);
-        }
-        
-        if (isset($config['logout'])) {
-            $container->setParameter('shibboleth.logout', $config['logout']);
-        }
-        
-        if (isset($config['returnto'])) {
-            $container->setParameter('shibboleth.returnto', $config['returnto']);
-        }	
+	
+        $container->setParameter('shibboleth.login', $config['login']);
+        $container->setParameter('shibboleth.logout', $config['logout']);
+        $container->setParameter('shibboleth.returnto', $config['returnto']);
+		$container->setParameter('shibboleth.username', $config['username']);
     }
 }

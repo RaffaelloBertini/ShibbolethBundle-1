@@ -4,7 +4,7 @@
     "description": "Shibboleth authentication (via environmental variables) for Symfony 2",
     "keywords": ["authentication"],
     "homepage": "https://redmine.oit.duke.edu/projects/shibboleth-bundle",
-    "license": "TBD",
+    "license": "MIT",
     "authors": [
         {
             "name": "Gabe Fahl",
