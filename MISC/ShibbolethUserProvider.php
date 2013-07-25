@@ -1,14 +1,17 @@
 <?php
 
-namespace <SOME NAMESPACE>\UserProvider;
+// CHANGE ME
+namespace YOUR\PROJECT\UserProvider;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use <SOME NAMESPACE>\Document\User;
 
-class ShibUserProvider implements UserProviderInterface
+// CHANGE ME
+use YOUR\PROJECT\Document\User;
+
+class ShibbolethUserProvider implements UserProviderInterface
 {
     protected $dm;
 	
@@ -18,8 +21,9 @@ class ShibUserProvider implements UserProviderInterface
     }
 	
     public function loadUserByUsername($username)
-    {		
-        $user = $this->dm->getRepository('<SOME BUNDLE>:User')->findOneByUsername($username);
+    {
+    	// CHANGE ME		
+        $user = $this->dm->getRepository('<SOME BUNDLE>:<USER DOCUMENT>')->findOneByUsername($username);
 		
         if (!$user) {
             $user = new User();
@@ -43,6 +47,7 @@ class ShibUserProvider implements UserProviderInterface
 
     public function supportsClass($class)
     {
-        return $class === '<SOME NAMESPACE>\Document\User';
+    	// CHANGE ME
+        return $class === 'YOUR\PROJECT\Document\User';
     }
 }

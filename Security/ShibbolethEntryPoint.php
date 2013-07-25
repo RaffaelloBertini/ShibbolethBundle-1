@@ -23,6 +23,9 @@ class ShibbolethEntryPoint implements AuthenticationEntryPointInterface
 	 */
     public function start(Request $request, AuthenticationException $authException = null)
     {
+    	// There must be an easier way to create the URL? Why do I need to include
+    	// $baseUrl (/app_dev.php). Shouldn't there be a method that create the host
+    	// name with just that portion included?
 		$relPath = $this->shib->getLogin();
 		$host = $request->getHttpHost(); 
 		$baseUrl = $request->getBaseUrl();
