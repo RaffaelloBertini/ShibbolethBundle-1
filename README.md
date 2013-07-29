@@ -8,7 +8,6 @@ Special thanks goes out to Ronny Moreas, https://github.com/rmoreas/ShibbolethBu
 object idea to make accessing config.yml settings, from within the bundle, easier. If your Shibboleth instance is setup
 to use request headers instead of environmental variables, check out his bundle.
 
-
 Composer Installation
 --------------------------
 
