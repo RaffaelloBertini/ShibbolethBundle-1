@@ -32,7 +32,7 @@ class ShibbolethEntryPoint implements AuthenticationEntryPointInterface
 		$secure = ($request->isSecure()) ? 'https://' : 'http://'; 
 				
 		$redirect = $secure.$host.$baseUrl.$relPath;
-
-        return new RedirectResponse($redirect);
+		
+		return new RedirectResponse($redirect);
     }
 }

@@ -34,8 +34,21 @@ class ShibbolethListener implements ListenerInterface
         $request = $event->getRequest();
 		$usernameVar = $this->shib->getUsername();
 
-        $remoteUser = isset($_SERVER[$usernameVar]) ? $_SERVER[$usernameVar] : false;
+		if ($usernameVar === 'REMOTE_USER') {
 
+			// I discovered this by pure luck. When using the production controller,
+			// the REDIRECT_REMOTE_USER gets set, so my initial logic would fail and
+			// create a redirect loop since I was just looking for the REMOTE_USER.
+			// I don't understand the dynamics of this yet, but it seems to have fixed
+			// the problem.
+			// TODO Learn dynamics of REDIRECT/REMOTE_USER
+			
+			$remoteUser = (isset($_SERVER['REDIRECT_REMOTE_USER'])) ? 
+				$_SERVER['REDIRECT_REMOTE_USER'] : $remoteUser = (isset($_SERVER[$usernameVar])) ? $_SERVER[$usernameVar] : false;
+		} else {
+        	$remoteUser = isset($_SERVER[$usernameVar]) ? $_SERVER[$usernameVar] : false;
+		}
+		
 		// If user is logging in, let's create that sweet sweet token
         if (!empty($remoteUser)) {
             $token = new ShibbolethUserToken();
