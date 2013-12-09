@@ -26,8 +26,7 @@ class ShibbolethFactory implements SecurityFactoryInterface
         $listenerId = 'security.authentication.listener.shibboleth.'.$id;
         $container
         	->setDefinition($listenerId, 
-        		new DefinitionDecorator('shibboleth.security.authentication.listener'))
-			->replaceArgument(2, new Reference($entryPointId));				
+        		new DefinitionDecorator('shibboleth.security.authentication.listener'));				
 		
         return array($providerId, $listenerId, $entryPointId);
     }

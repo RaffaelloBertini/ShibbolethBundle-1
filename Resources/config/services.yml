@@ -9,11 +9,11 @@ services:
 
   shibboleth.security.authentication.listener:
     class: Duke\ShibbolethBundle\Security\ShibbolethListener
-    arguments: ["@security.context", "@security.authentication.manager", "", "@shibboleth"]
+    arguments: ["@security.context", "@security.authentication.manager", "@shibboleth.security.entry_point", "@shibboleth"]
       
   shibboleth.security.entry_point:
     class: Duke\ShibbolethBundle\Security\ShibbolethEntryPoint
-    arguments: ["@shibboleth"]
+    arguments: ["@shibboleth", "@security.context"]
       
   shibboleth.security.logout_handler:
     class: Duke\ShibbolethBundle\Security\ShibbolethLogoutHandler

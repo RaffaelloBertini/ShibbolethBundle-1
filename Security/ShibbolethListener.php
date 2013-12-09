@@ -9,6 +9,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
+
 use Duke\ShibbolethBundle\Security\Shibboleth;
 use Duke\ShibbolethBundle\Security\ShibbolethUserToken;
 
@@ -26,16 +30,16 @@ class ShibbolethListener implements ListenerInterface
         $this->securityContext = $securityContext;
 		$this->authenticationManager = $authenticationManager;
 		$this->authenticationEntryPoint = $authenticationEntryPoint;
-		$this->shib = $shib;		
+		$this->shib = $shib;	
     }
 
     public function handle(GetResponseEvent $event)
     {	
         $request = $event->getRequest();
 		$usernameVar = $this->shib->getUsername();
-
+		
+		// Check for user authorization variable
 		if ($usernameVar === 'REMOTE_USER') {
-
 			// I discovered this by pure luck. When using the production controller,
 			// the REDIRECT_REMOTE_USER gets set, so my initial logic would fail and
 			// create a redirect loop since I was just looking for the REMOTE_USER.
@@ -44,45 +48,41 @@ class ShibbolethListener implements ListenerInterface
 			// TODO Learn dynamics of REDIRECT/REMOTE_USER
 			
 			$remoteUser = (isset($_SERVER['REDIRECT_REMOTE_USER'])) ? 
-				$_SERVER['REDIRECT_REMOTE_USER'] : $remoteUser = (isset($_SERVER[$usernameVar])) ? $_SERVER[$usernameVar] : false;
+				$_SERVER['REDIRECT_REMOTE_USER'] : $remoteUser = (isset($_SERVER[$usernameVar])) ? $_SERVER[$usernameVar] : false;		
 		} else {
         	$remoteUser = isset($_SERVER[$usernameVar]) ? $_SERVER[$usernameVar] : false;
 		}
 		
-		// If user is logging in, let's create that sweet sweet token
+		// If user is logging in, let's create that sweet sweet token.
+		// Otherwise, check for existing token.
         if (!empty($remoteUser)) {
             $token = new ShibbolethUserToken();
             $token->setUser($remoteUser);
-
-            try {
-                $authToken = $this->authenticationManager->authenticate($token);
-				$this->securityContext->setToken($authToken);
-
-				return;
-            } catch (AuthenticationException $e) {
-            	
-                // you might log something here
-            }
+        } else {
+        	$token = $this->securityContext->getToken();
         } 
+        
+        
+		// FIXME The ROLE_PREVIOUS_ADMIN keeps getting lost during a _switch_user event.
+		// Additionally, performing a _switch_user on the active username is supposed to 
+		// generate an error, but does not. I can switch users, but it's not properly
+		// implemented.
+        
+        // If token exists authenticate it. Else,
+        // kick them off to the login URL. Special thanks to the poster 'm2mdas' for demonstrating
+        // how to do this. The Symfony docs provide no information on how to implement a redirect
+        // http://stackoverflow.com/questions/10089816/symfony2-how-to-check-if-an-action-is-secured        
+        if (!empty($token)) {
+        	try {
+        		$authToken = $this->authenticationManager->authenticate($token);
+        		$this->securityContext->setToken($authToken);
 
-		// Default Symfony response to denying authorization
-		//$response = new Response();
-		//$response->setStatusCode(403);
-		//$event->setResponse($response);
- 		
-		// If $usernameVar isn't set, check to see if user has an existing token. If not,
-		// kick them to login URL. Special thanks to the poster 'm2mdas' for demonstrating
-		// how to do this. The Symfony docs provide no information on how to implement a 
-		// redirect
-		// http://stackoverflow.com/questions/10089816/symfony2-how-to-check-if-an-action-is-secured
-
-		$existing = $this->securityContext->getToken();
-		
-		if (empty($remoteUser) && empty($existing)) {
-			$response = $this->authenticationEntryPoint->start($request);
-            $event->setResponse($response);
-		}
-		
-		return;
+        		return;	
+        	} catch (AuthenticationException $e) {
+        	}
+        } else {  	
+        	$response = $this->authenticationEntryPoint->start($request);
+        	$event->setResponse($response);        	
+        }     
     }
 }
