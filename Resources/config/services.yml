@@ -1,5 +1,7 @@
 services:
   
+  
+  # Provides the authentication provider with user values added in the config.yml
   shibboleth:
     class: Duke\ShibbolethBundle\Security\Shibboleth
     arguments: ["%shibboleth.login%", "%shibboleth.logout%", "%shibboleth.returnto%", "%shibboleth.username%"]
@@ -13,7 +15,7 @@ services:
       
   shibboleth.security.entry_point:
     class: Duke\ShibbolethBundle\Security\ShibbolethEntryPoint
-    arguments: ["@shibboleth", "@security.context"]
+    arguments: ["@shibboleth"]
       
   shibboleth.security.logout_handler:
     class: Duke\ShibbolethBundle\Security\ShibbolethLogoutHandler

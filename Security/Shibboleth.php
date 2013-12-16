@@ -6,10 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Shibboleth 
 {
-	protected $login;
-	protected $logout;
-	protected $returnTo;
-	protected $username;
+	private $login;
+	private $logout;
+	private $returnTo;
+	private $username;
 	    
     public function __construct($login, $logout, $returnTo, $username) 
     {

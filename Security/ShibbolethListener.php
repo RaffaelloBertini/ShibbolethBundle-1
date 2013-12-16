@@ -61,12 +61,8 @@ class ShibbolethListener implements ListenerInterface
         } else {
         	$token = $this->securityContext->getToken();
         } 
-        
-        
-		// FIXME The ROLE_PREVIOUS_ADMIN keeps getting lost during a _switch_user event.
-		// Additionally, performing a _switch_user on the active username is supposed to 
-		// generate an error, but does not. I can switch users, but it's not properly
-		// implemented.
+
+
         
         // If token exists authenticate it. Else,
         // kick them off to the login URL. Special thanks to the poster 'm2mdas' for demonstrating
@@ -83,6 +79,6 @@ class ShibbolethListener implements ListenerInterface
         } else {  	
         	$response = $this->authenticationEntryPoint->start($request);
         	$event->setResponse($response);        	
-        }     
+        }
     }
 }

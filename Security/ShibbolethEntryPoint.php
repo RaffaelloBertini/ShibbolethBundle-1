@@ -2,23 +2,20 @@
 
 namespace Duke\ShibbolethBundle\Security;
 
+use Duke\ShibbolethBundle\Security\Shibboleth;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Duke\ShibbolethBundle\Security\Shibboleth;
 
 class ShibbolethEntryPoint implements AuthenticationEntryPointInterface
 {
 	private $shib;
-	//private $securityContext;
 	
-    public function __construct(Shibboleth $shib, SecurityContextInterface $securityContext)
+    public function __construct(Shibboleth $shib)
     {
 		$this->shib = $shib;
-		//$this->securityContext = $securityContext;
     }
 
 	/**

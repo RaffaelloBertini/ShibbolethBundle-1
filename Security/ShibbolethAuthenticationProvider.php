@@ -33,14 +33,7 @@ class ShibbolethAuthenticationProvider implements AuthenticationProviderInterfac
     }
 
     public function supports(TokenInterface $token)
-    {
-    	foreach ($token->getRoles() as $role) {
-    		if ($role instanceof SwitchUserRole) {
-    			$token = $role->getSource();
-    			break;
-    		}
-    	}    	
-    	
+    {	
         return $token instanceof ShibbolethUserToken;
     }
 }
