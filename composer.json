@@ -12,15 +12,12 @@
         }
     ],
     "require": {
-        "symfony/framework-bundle": "~2.1"
+        "php": ">=5.3"
+        "symfony/framework-bundle": ">=2.1"
     },
     "autoload": {
         "psr-0": { "Fahl\\ShibbolethBundle": "" }
     },
-    "target-dir": "Fahl/ShibbolethBundle",
-    "extra": {
-    	"branch-alias": {
-    		"dev-master": "1.0.x-dev"
-    	}
+    "target-dir": "Fahl/ShibbolethBundle"
     }
 }
