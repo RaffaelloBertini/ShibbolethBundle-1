@@ -8,7 +8,6 @@ Special thanks goes out to Ronny Moreas, https://github.com/rmoreas/ShibbolethBu
 object idea to make accessing config.yml settings, from within the bundle, easier. If your Shibboleth instance is setup
 to use request headers instead of environmental variables, check out his bundle.
 
-
 Composer Installation
 --------------------------
 
@@ -63,7 +62,7 @@ framework:
   
 shibboleth:
   # Shib sample login
-	login: /shibboleth
+  login: /shibboleth
     
   # Shib sample logout
   logout: /Shibboleth.sso/Logout
@@ -80,10 +79,9 @@ shibboleth:
 ```yml
   security:
     ...
-	  
     firewalls:
-	    secured_area:
-		    ...    
+      secured_area:
+        ...    
         
         # Add the authentication listener
         shibboleth: ~
@@ -116,13 +114,12 @@ http://symfony.com/doc/current/cookbook/security/entity_provider.html
 ```yml
 # app/config/security.yml
   security:
-    ...
-    
+    ... 
     providers:
     
       # A sample document provider
       document_provider:
-        id shibboleth_user_provider
+        id: shibboleth_user_provider
 ```
 
 ### 3c. Create UserProvider service

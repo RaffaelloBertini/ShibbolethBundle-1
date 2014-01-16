@@ -11,24 +11,23 @@ use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\SecurityF
 class ShibbolethFactory implements SecurityFactoryInterface
 {
     public function create(ContainerBuilder $container, $id, $config, $userProvider, $defaultEntryPoint)
-    {			
+    {
         $providerId = 'security.authentication.provider.shibboleth.'.$id;
         $container
-            ->setDefinition($providerId, 
-            	new DefinitionDecorator('shibboleth.security.authentication.provider'))
-			->addArgument(new Reference($userProvider));
-		
+            ->setDefinition($providerId,
+                new DefinitionDecorator('shibboleth.security.authentication.provider'))
+            ->addArgument(new Reference($userProvider));
+
         $entryPointId = 'security.entry_point.shibboleth.'.$id;
         $container
-            ->setDefinition($entryPointId, 
-            	new DefinitionDecorator('shibboleth.security.entry_point'));
-		
+            ->setDefinition($entryPointId,
+                new DefinitionDecorator('shibboleth.security.entry_point'));
+
         $listenerId = 'security.authentication.listener.shibboleth.'.$id;
         $container
-        	->setDefinition($listenerId, 
-        		new DefinitionDecorator('shibboleth.security.authentication.listener'))
-			->replaceArgument(2, new Reference($entryPointId));				
-		
+            ->setDefinition($listenerId,
+                new DefinitionDecorator('shibboleth.security.authentication.listener'));
+
         return array($providerId, $listenerId, $entryPointId);
     }
 

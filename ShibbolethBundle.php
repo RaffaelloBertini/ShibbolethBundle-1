@@ -2,9 +2,9 @@
 
 namespace Fahl\ShibbolethBundle;
 
+use Fahl\ShibbolethBundle\Security\ShibbolethFactory;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Fahl\ShibbolethBundle\Security\ShibbolethFactory;
 
 class ShibbolethBundle extends Bundle
 {
@@ -14,5 +14,5 @@ class ShibbolethBundle extends Bundle
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ShibbolethFactory());
-    }	
+    }
 }

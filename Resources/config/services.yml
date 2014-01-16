@@ -1,20 +1,21 @@
 services:
-  
+
+  # Provides the authentication provider with user values added in the config.yml
   shibboleth:
     class: Fahl\ShibbolethBundle\Security\Shibboleth
     arguments: ["%shibboleth.login%", "%shibboleth.logout%", "%shibboleth.returnto%", "%shibboleth.username%"]
-  
+
   shibboleth.security.authentication.provider:
     class: Fahl\ShibbolethBundle\Security\ShibbolethAuthenticationProvider
 
   shibboleth.security.authentication.listener:
     class: Fahl\ShibbolethBundle\Security\ShibbolethListener
-    arguments: ["@security.context", "@security.authentication.manager", "", "@shibboleth"]
-      
+    arguments: ["@security.context", "@security.authentication.manager", "@shibboleth.security.entry_point", "@shibboleth"]
+
   shibboleth.security.entry_point:
     class: Fahl\ShibbolethBundle\Security\ShibbolethEntryPoint
     arguments: ["@shibboleth"]
-      
+
   shibboleth.security.logout_handler:
     class: Fahl\ShibbolethBundle\Security\ShibbolethLogoutHandler
     arguments: ["@shibboleth"]

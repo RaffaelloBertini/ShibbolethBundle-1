@@ -6,7 +6,6 @@ use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProvid
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Fahl\ShibbolethBundle\Security\ShibbolethUserToken;
 
 class ShibbolethAuthenticationProvider implements AuthenticationProviderInterface
 {
@@ -15,7 +14,7 @@ class ShibbolethAuthenticationProvider implements AuthenticationProviderInterfac
     public function __construct(UserProviderInterface $userProvider)
     {
         $this->userProvider = $userProvider;
-    }	
+    }
 
     public function authenticate(TokenInterface $token)
     {

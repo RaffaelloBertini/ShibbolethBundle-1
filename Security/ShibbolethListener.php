@@ -9,67 +9,68 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Fahl\ShibbolethBundle\Security\Shibboleth;
-use Fahl\ShibbolethBundle\Security\ShibbolethUserToken;
 
 class ShibbolethListener implements ListenerInterface
 {
     protected $securityContext;
-	protected $authenticationManager;
-	protected $authenticationEntryPoint;
-	protected $shib;
+    protected $authenticationManager;
+    protected $authenticationEntryPoint;
+    protected $shib;
 
-    public function __construct(SecurityContextInterface $securityContext, 
-    		AuthenticationManagerInterface $authenticationManager,
-    		AuthenticationEntryPointInterface $authenticationEntryPoint, Shibboleth $shib)
+    public function __construct(SecurityContextInterface $securityContext,
+            AuthenticationManagerInterface $authenticationManager,
+            AuthenticationEntryPointInterface $authenticationEntryPoint, Shibboleth $shib)
     {
         $this->securityContext = $securityContext;
-		$this->authenticationManager = $authenticationManager;
-		$this->authenticationEntryPoint = $authenticationEntryPoint;
-		$this->shib = $shib;		
+        $this->authenticationManager = $authenticationManager;
+        $this->authenticationEntryPoint = $authenticationEntryPoint;
+        $this->shib = $shib;
     }
 
     public function handle(GetResponseEvent $event)
-    {	
+    {
         $request = $event->getRequest();
-		$usernameVar = $this->shib->getUsername();
+        $usernameVar = $this->shib->getUsername();
 
-        $remoteUser = isset($_SERVER[$usernameVar]) ? $_SERVER[$usernameVar] : false;
+        // Check for user authorization variable
+        if ($usernameVar === 'REMOTE_USER') {
+            // I discovered this by pure luck. When using the production controller,
+            // the REDIRECT_REMOTE_USER gets set, so my initial logic would fail and
+            // create a redirect loop since I was just looking for the REMOTE_USER.
+            // I don't understand the dynamics of this yet, but it seems to have fixed
+            // the problem.
+            // TODO Learn dynamics of REDIRECT/REMOTE_USER
 
-		// If user is logging in, let's create that sweet sweet token
+            $remoteUser = (isset($_SERVER['REDIRECT_REMOTE_USER'])) ?
+                $_SERVER['REDIRECT_REMOTE_USER'] : $remoteUser = (isset($_SERVER[$usernameVar])) ? $_SERVER[$usernameVar] : false;
+        } else {
+            $remoteUser = isset($_SERVER[$usernameVar]) ? $_SERVER[$usernameVar] : false;
+        }
+
+        // If user is logging in, let's create that sweet sweet token.
+        // Otherwise, check for existing token.
         if (!empty($remoteUser)) {
             $token = new ShibbolethUserToken();
             $token->setUser($remoteUser);
+        } else {
+            $token = $this->securityContext->getToken();
+        }
 
+        // If token exists authenticate it. Else,
+        // kick them off to the login URL. Special thanks to the poster 'm2mdas' for demonstrating
+        // how to do this. The Symfony docs provide no information on how to implement a redirect
+        // http://stackoverflow.com/questions/10089816/symfony2-how-to-check-if-an-action-is-secured
+        if (!empty($token)) {
             try {
                 $authToken = $this->authenticationManager->authenticate($token);
-				$this->securityContext->setToken($authToken);
+                $this->securityContext->setToken($authToken);
 
-				return;
+                return;
             } catch (AuthenticationException $e) {
-            	
-                // you might log something here
             }
-        } 
-
-		// Default Symfony response to denying authorization
-		//$response = new Response();
-		//$response->setStatusCode(403);
-		//$event->setResponse($response);
- 		
-		// If $usernameVar isn't set, check to see if user has an existing token. If not,
-		// kick them to login URL. Special thanks to the poster 'm2mdas' for demonstrating
-		// how to do this. The Symfony docs provide no information on how to implement a 
-		// redirect
-		// http://stackoverflow.com/questions/10089816/symfony2-how-to-check-if-an-action-is-secured
-
-		$existing = $this->securityContext->getToken();
-		
-		if (empty($remoteUser) && empty($existing)) {
-			$response = $this->authenticationEntryPoint->start($request);
+        } else {
+            $response = $this->authenticationEntryPoint->start($request);
             $event->setResponse($response);
-		}
-		
-		return;
+        }
     }
 }
