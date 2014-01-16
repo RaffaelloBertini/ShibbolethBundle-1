@@ -1,15 +1,14 @@
 ShibbolethBundle
 ================
 
-Provides Shibboleth authentication, using environmental variables, for your Symfony 2 application. I've created this in an
-Apache basic auth. environment, but it should theoretically work in a Shibbolized environment.
+Provides Shibboleth authentication, using environmental variables, for your Symfony >=2.2 application.
 
 Special thanks goes out to Ronny Moreas, https://github.com/rmoreas/ShibbolethBundle. I've implemented his Shibboleth.php
 object idea to make accessing config.yml settings, from within the bundle, easier. If your Shibboleth instance is setup
 to use request headers instead of environmental variables, check out his bundle.
 
-Composer Installation
---------------------------
+Installation
+-------------
 
 ### 1. Add the ShibbolethBundle to composer.json
 
@@ -27,7 +26,7 @@ Composer Installation
   ],  
 ```
 
-### 2. Execute the Composer update/download command
+### 2. Execute the Composer update command
 
 ```bash
   php composer.phar update fahl/shibboleth-bundle
@@ -50,7 +49,7 @@ Configuration
 
 ### 1. app/config/config.yml
 
-Important note: In my local setup, I use port 8080. By default, Symfony redirects the user to port 80 when using
+FYI: In my local setup, I use port 8080. By default, Symfony redirects the user to port 80 when using
 SSL. You can change this behavior under the framework configuration as shown below.
 
 ```yml
@@ -92,6 +91,9 @@ shibboleth:
           
           # Handler which handle redirect to Shib logout specified in config.yml
           success_handler: shib.security.logout_handler
+         
+          # Needed for PHP < 5.4.11 bug
+          invalidate_session: false
 
     access_control:
   
