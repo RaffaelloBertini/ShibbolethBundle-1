@@ -15,13 +15,13 @@ Installation
 ```js
   "require": {
       ...
-      "RaffaelloBertini/ShibbolethBundle-1": "dev-master"
+      "fahl/shibboleth-bundle": "dev-master"
       ...
   },
   "repositories": [
       {
           "type": "git",
-          "url": "git@github.com:RaffaelloBertini/ShibbolethBundle-1.git"
+          "url": "git@github.com:gabefahl/ShibbolethBundle.git"
       }
   ],  
 ```
@@ -29,7 +29,7 @@ Installation
 ### 2. Execute the Composer update command
 
 ```bash
-  php composer.phar update
+  php composer.phar update fahl/shibboleth-bundle
 ```
 
 ### 3. Enable the bundle in app/AppKernel.php
