@@ -15,13 +15,13 @@ Installation
 ```js
   "require": {
       ...
-      "fahl/shibboleth-bundle": "dev-master"
+      "RaffaelloBertini/ShibbolethBundle-1": "dev-master"
       ...
   },
   "repositories": [
       {
-          "type": "vcs",
-          "url": "git@github.com:gabefahl/ShibbolethBundle.git"
+          "type": "git",
+          "url": "git@github.com:RaffaelloBertini/ShibbolethBundle-1.git"
       }
   ],  
 ```
@@ -29,7 +29,7 @@ Installation
 ### 2. Execute the Composer update command
 
 ```bash
-  php composer.phar update fahl/shibboleth-bundle
+  php composer.phar update
 ```
 
 ### 3. Enable the bundle in app/AppKernel.php
@@ -90,7 +90,7 @@ shibboleth:
           path: /logout
           
           # Handler which handle redirect to Shib logout specified in config.yml
-          success_handler: shib.security.logout_handler
+          success_handler: shibboleth.security.logout_handler
          
           # Needed for PHP < 5.4.11 bug
           invalidate_session: false
